@@ -8,15 +8,21 @@
 
 import UIKit
 import AFNetworking
+import KVNProgress
 
 class MoviesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     @IBOutlet weak var tableView: UITableView!
     
     var movies: [NSDictionary]?
+    var refreshControl: UIRefreshControl!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: "onRefresh", forControlEvents: UIControlEvents.ValueChanged)
+        tableView.insertSubview(refreshControl, atIndex: 0)
         
         tableView.dataSource = self
         tableView.delegate = self
@@ -45,8 +51,43 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
                 }
         });
         task.resume()
+        
+        
+        
+        // Progress has to be between 0 and 1
+       // [KVNProgress showProgres:0.5f];
+        
+        // Adds a status below the progress
+        //[KVNProgress showProgress:0.5f
+        //    status:@"Loading"];
+        
+        // Adds the HUD to a certain view instead of main window
+        //[KVNProgress showProgress:0.5f
+        //status:@"Loading"
+        //onView:view];
+        
+        // Updates the progress
+        //[KVNProgress updateProgress:0.75f
+        //animated:YES];
 
         // Do any additional setup after loading the view.
+    }
+    
+    
+    
+    func delay(delay:Double, closure:()->()) {
+        dispatch_after(
+            dispatch_time(
+                DISPATCH_TIME_NOW,
+                Int64(delay * Double(NSEC_PER_SEC))
+            ),
+            dispatch_get_main_queue(), closure)
+    }
+    
+    func onRefresh() {
+        delay(2, closure: {
+            self.refreshControl.endRefreshing()
+        })
     }
     
     
@@ -56,6 +97,8 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int{
        
@@ -69,6 +112,8 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
 
+    
+    
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell{
         let cell = tableView.dequeueReusableCellWithIdentifier("MovieCell", forIndexPath: indexPath) as! MovieCell
         
