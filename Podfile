@@ -5,6 +5,6 @@ use_frameworks!
 
 target 'Flickle' do
 pod ‘AFNetworking’
-pod ‘KVNProgress’
+pod ‘EZLoadingActivity’
 end
 

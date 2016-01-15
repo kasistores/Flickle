@@ -8,7 +8,7 @@
 
 import UIKit
 import AFNetworking
-import KVNProgress
+import EZLoadingActivity
 
 class MoviesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
@@ -46,29 +46,17 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
                             
                             self.movies = responseDictionary["results"] as! [NSDictionary]
                             self.tableView.reloadData()
+                            EZLoadingActivity.hide(success: true, animated: true)
+                            
                             
                     }
+                }
+                else {
+                    EZLoadingActivity.hide(success: false, animated: false)
                 }
         });
         task.resume()
         
-        //comment
-        
-        // Progress has to be between 0 and 1
-       // [KVNProgress showProgres:0.5f];
-        
-        // Adds a status below the progress
-        //[KVNProgress showProgress:0.5f
-        //    status:@"Loading"];
-        
-        // Adds the HUD to a certain view instead of main window
-        //[KVNProgress showProgress:0.5f
-        //status:@"Loading"
-        //onView:view];
-        
-        // Updates the progress
-        //[KVNProgress updateProgress:0.75f
-        //animated:YES];
 
         // Do any additional setup after loading the view.
     }
@@ -101,6 +89,8 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int{
+        
+        EZLoadingActivity.showWithDelay("Waiting...", disableUI: false, seconds: 2)
        
         if let movies = movies {
             return movies.count
