@@ -23,7 +23,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         
         //changes the color of the text
-        UINavigationBar.appearance().titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor()]
+      //  UINavigationBar.appearance().titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor()]
+        
+        //Change the size of the font
+        UINavigationBar.appearance().titleTextAttributes = [NSFontAttributeName: UIFont.systemFontOfSize(40)]
         
         
         return true
