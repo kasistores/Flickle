@@ -10,7 +10,7 @@ The following **required** functionality is complete:
 
 - [x] User can view a list of movies currently playing in theaters from The Movie Database.
 - [x] Poster images are loaded using the UIImageView category in the AFNetworking library.
-- [ ] User sees a loading state while waiting for the movies API.
+- [x] User sees a loading state while waiting for the movies API.
 - [x] User can pull to refresh the movie list.
 
 The following **optional** features are implemented:
@@ -29,13 +29,13 @@ The following **additional** features are implemented:
 
 Here's a walkthrough of implemented user stories:
 
-<img src='http://i.imgur.com/O8VElpM.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='http://i.imgur.com/SFQOTJy.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
 ## Notes
 
-Describe any challenges encountered while building the app.
+For some reason on the simulator a white screen appears while the loading sign is shown and the app appears when the loading is done. In the phone, the loading symbol never leaves even after the the "success" symbol is shown. I also don't know how to fix the issue "scene is unreachable due to lack of entry..." that I recieved.
 
 ## License
 
