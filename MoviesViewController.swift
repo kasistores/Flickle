@@ -46,6 +46,7 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
                             
                             self.movies = responseDictionary["results"] as! [NSDictionary]
                             self.tableView.reloadData()
+                          
                             EZLoadingActivity.hide(success: true, animated: true)
                             
                             
