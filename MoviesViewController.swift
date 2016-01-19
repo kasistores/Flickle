@@ -9,21 +9,17 @@
 import UIKit
 import AFNetworking
 import EZLoadingActivity
+import MBProgressHUD
 
 class MoviesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     @IBOutlet weak var tableView: UITableView!
     
-    @IBOutlet weak var navigationBar: UINavigationBar!
     var movies: [NSDictionary]?
     var refreshControl: UIRefreshControl!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        
-        self.navigationBar.barStyle = UIBarStyle.Black
-        self.navigationBar.tintColor = UIColor.whiteColor()
         
         
         refreshControl = UIRefreshControl()
@@ -117,34 +113,44 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         let movie = movies![indexPath.row]
         let title = movie["title"] as! String
         let overview = movie["overview"] as! String
-        let posterPath = movie["poster_path"] as! String
+        cell.overviewLabel.text = overview
+        cell.titleLabel.text = title
+        
         
         let baseUrl = "http://image.tmdb.org/t/p/w500"
         
-        let imageUrl = NSURL(string: baseUrl + posterPath)
-        
-        cell.overviewLabel.text = overview
-        cell.titleLabel.text = title
-        cell.posterView.setImageWithURL(imageUrl!)
+        if let posterPath = movie["poster_path"] as? String {
+            let imageUrl = NSURL(string: baseUrl + posterPath)
+            cell.posterView.setImageWithURL(imageUrl!)
+        }
         
         print("row \(indexPath.row)")
         return cell
     }
     
     
-    @IBAction func onTap(sender: AnyObject) {
-        view.endEditing(true)
-    }
+    //@IBAction func onTap(sender: AnyObject) {
+      //  view.endEditing(true)
+    //}
 
 
-    /*
+    
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        let cell = sender as! UITableViewCell
+        let indexPath = tableView.indexPathForCell(cell)
+        let movie = movies![indexPath!.row]
+        
+        let detailViewcontroller = segue.destinationViewController as! DetailViewController
+        detailViewcontroller.movie = movie
+        
+        
+        
+        print("Prepare for Segue Called")
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
     }
-    */
 
 }

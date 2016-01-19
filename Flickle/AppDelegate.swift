@@ -19,14 +19,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         
         // Set navigation bar tint / background color
-        UINavigationBar.appearance().barTintColor = UIColor.clearColor()
+        //UINavigationBar.appearance().barTintColor = UIColor.blackColor()
         
         
         //changes the color of the text
-      //  UINavigationBar.appearance().titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor()]
+        //UINavigationBar.appearance().titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor()]
         
         //Change the size of the font
-        UINavigationBar.appearance().titleTextAttributes = [NSFontAttributeName: UIFont.systemFontOfSize(40)]
+        //UINavigationBar.appearance().titleTextAttributes = [NSFontAttributeName: UIFont.systemFontOfSize(40)]
         
         
         return true
