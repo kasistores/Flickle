@@ -27,13 +27,13 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         
         EZLoadingActivity.show("Waiting...", disableUI: true)
         
-        self.navigationController?.navigationBar.tintColor = color
-        self.navigationController?.navigationBar.barTintColor = colorTwo
-        //self.navigationController?.navigationBar.translucent = true
-        self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.orangeColor()]
+        self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
+        self.navigationController?.navigationBar.barTintColor = UIColor.redColor()
+        self.navigationController?.navigationBar.translucent = true
+        self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor()]
         //self.navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName: UIFont.systemFontOfSize(25)]
-        self.tabBarController?.tabBar.barTintColor = colorTwo
-        self.tabBarController?.tabBar.tintColor = UIColor.orangeColor()
+        self.tabBarController?.tabBar.barTintColor = UIColor.redColor()
+        self.tabBarController?.tabBar.tintColor = UIColor.whiteColor()
         
         
         refreshControl = UIRefreshControl()
