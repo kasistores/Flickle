@@ -16,15 +16,18 @@ PODS:
     - AFNetworking/NSURLSession
   - EZLoadingActivity (0.7)
   - MBProgressHUD (0.9.2)
+  - SwiftHEXColors (1.0.0)
 
 DEPENDENCIES:
   - AFNetworking
   - EZLoadingActivity
   - MBProgressHUD
+  - SwiftHEXColors
 
 SPEC CHECKSUMS:
   AFNetworking: a0075feb321559dc78d9d85b55d11caa19eabb93
   EZLoadingActivity: d0450022cfcec79e079d037af922a728828f4b80
   MBProgressHUD: 1569cf7ace17a8bac47aabfbb8580a49690386d1
+  SwiftHEXColors: 87bb7cfef19e1a5c93c75c21df60464e6f960062
 
 COCOAPODS: 0.39.0

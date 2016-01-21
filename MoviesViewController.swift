@@ -10,6 +10,7 @@ import UIKit
 import AFNetworking
 import EZLoadingActivity
 import MBProgressHUD
+import SwiftHEXColors
 
 class MoviesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate{
 
@@ -18,8 +19,6 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     @IBOutlet weak var collectionView: UICollectionView!
     var movies: [NSDictionary]?
     var refreshControl: UIRefreshControl!
-    var color = UIColor.whiteColor()
-    var colorTwo = UIColor.clearColor()
     //var font = UIFont.systemFontOfSize(21)
     var endpoint: String!
     
@@ -27,15 +26,15 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         super.viewDidLoad()
         
         EZLoadingActivity.show("Waiting...", disableUI: true)
+        let color = UIColor(hexString: "#ff8942")
         
         self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
-        self.navigationController?.navigationBar.barTintColor = UIColor.redColor()
+        self.navigationController?.navigationBar.barTintColor = color
         self.navigationController?.navigationBar.translucent = true
         self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor()]
         //self.navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName: UIFont.systemFontOfSize(25)]
         self.tabBarController?.tabBar.translucent = true
-        self.tabBarController?.tabBar.tintColor = UIColor.redColor()
-        
+        self.tabBarController?.tabBar.tintColor = color
         
         refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: "onRefresh", forControlEvents: UIControlEvents.ValueChanged)
@@ -133,32 +132,32 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         let baseUrl = "http://image.tmdb.org/t/p/w500"
         
         if let posterPath = movie["poster_path"] as? String {
-            let imageUrl = NSURL(string: baseUrl + posterPath)
-            cell.posterView.setImageWithURL(imageUrl!)
+            let imageUrl = NSURLRequest(URL: NSURL(string: baseUrl + posterPath)!)
+            cell.posterView.setImageWithURLRequest(
+                imageUrl,
+                placeholderImage: nil,
+                success: { (imageRequest, imageResponse, image) -> Void in
+                    
+                    // imageResponse will be nil if the image is cached
+                    if imageResponse != nil {
+                        print("Image was NOT cached, fade in image")
+                        cell.posterView.alpha = 0.0
+                        cell.posterView.image = image
+                        UIView.animateWithDuration(0.3, animations: { () -> Void in
+                            cell.posterView.alpha = 1.0
+                        })
+                    } else {
+                        print("Image was cached so just update the image")
+                        cell.posterView.image = image
+                    }
+                },
+                failure: { (imageUrl, imageResponse, error) -> Void in
+                    //leave blank
+            })
         }
         
         print("row \(indexPath.row)")
         return cell
-    }
-    
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return 140.0
-    }
-    
-    func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
-        
-        cell.contentView.backgroundColor = UIColor.clearColor()
-        
-        let whiteRoundedView : UIView = UIView(frame: CGRectMake(0, 10, self.view.frame.size.width, 120))
-        
-        whiteRoundedView.layer.backgroundColor = CGColorCreate(CGColorSpaceCreateDeviceRGB(), [1.0, 1.0, 1.0, 1.0])
-        whiteRoundedView.layer.masksToBounds = false
-        whiteRoundedView.layer.cornerRadius = 2.0
-        whiteRoundedView.layer.shadowOffset = CGSizeMake(-1, 1)
-        whiteRoundedView.layer.shadowOpacity = 0.2
-        
-        cell.contentView.addSubview(whiteRoundedView)
-        cell.contentView.sendSubviewToBack(whiteRoundedView)
     }
     
     
