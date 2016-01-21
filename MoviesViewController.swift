@@ -11,10 +11,11 @@ import AFNetworking
 import EZLoadingActivity
 import MBProgressHUD
 
-class MoviesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class MoviesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate{
 
     @IBOutlet weak var tableView: UITableView!
     
+    @IBOutlet weak var collectionView: UICollectionView!
     var movies: [NSDictionary]?
     var refreshControl: UIRefreshControl!
     var color = UIColor.whiteColor()
@@ -32,8 +33,8 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         self.navigationController?.navigationBar.translucent = true
         self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor()]
         //self.navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName: UIFont.systemFontOfSize(25)]
-        self.tabBarController?.tabBar.barTintColor = UIColor.redColor()
-        self.tabBarController?.tabBar.tintColor = UIColor.whiteColor()
+        self.tabBarController?.tabBar.translucent = true
+        self.tabBarController?.tabBar.tintColor = UIColor.redColor()
         
         
         refreshControl = UIRefreshControl()
@@ -105,7 +106,7 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     
     
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int{
+   func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int{
        
         if let movies = movies {
             return movies.count
@@ -139,6 +140,28 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         print("row \(indexPath.row)")
         return cell
     }
+    
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        return 140.0
+    }
+    
+    func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
+        
+        cell.contentView.backgroundColor = UIColor.clearColor()
+        
+        let whiteRoundedView : UIView = UIView(frame: CGRectMake(0, 10, self.view.frame.size.width, 120))
+        
+        whiteRoundedView.layer.backgroundColor = CGColorCreate(CGColorSpaceCreateDeviceRGB(), [1.0, 1.0, 1.0, 1.0])
+        whiteRoundedView.layer.masksToBounds = false
+        whiteRoundedView.layer.cornerRadius = 2.0
+        whiteRoundedView.layer.shadowOffset = CGSizeMake(-1, 1)
+        whiteRoundedView.layer.shadowOpacity = 0.2
+        
+        cell.contentView.addSubview(whiteRoundedView)
+        cell.contentView.sendSubviewToBack(whiteRoundedView)
+    }
+    
+    
     
     
     //@IBAction func onTap(sender: AnyObject) {

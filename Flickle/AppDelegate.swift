@@ -40,6 +40,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window?.rootViewController = tabBarController
         window?.makeKeyAndVisible()
         
+        UIApplication.sharedApplication().statusBarStyle = .LightContent
+        
+        
         //UITabBar.appearance().tintColor = UIColor.clearColor()
         
         return true
