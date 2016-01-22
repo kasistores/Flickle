@@ -16,16 +16,19 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
 
     @IBOutlet weak var tableView: UITableView!
     
+    @IBOutlet weak var statusView: UIView!
     @IBOutlet weak var collectionView: UICollectionView!
     var movies: [NSDictionary]?
     var refreshControl: UIRefreshControl!
-    //var font = UIFont.systemFontOfSize(21)
+    var font = UIFont.systemFontOfSize(21)
     var endpoint: String!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        EZLoadingActivity.show("Waiting...", disableUI: true)
+        
+        
+        //EZLoadingActivity.show("Waiting...", disableUI: true)
         let color = UIColor(hexString: "#ff8942")
         
         self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
@@ -35,6 +38,7 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         //self.navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName: UIFont.systemFontOfSize(25)]
         self.tabBarController?.tabBar.translucent = true
         self.tabBarController?.tabBar.tintColor = color
+        statusView.backgroundColor = color
         
         refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: "onRefresh", forControlEvents: UIControlEvents.ValueChanged)
@@ -69,7 +73,7 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
                     }
                 }
                 else {
-                    EZLoadingActivity.hide(success: false, animated: true)
+                   EZLoadingActivity.hide(success: false, animated: true)
                 }
         });
         task.resume()
@@ -77,31 +81,41 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
 
         // Do any additional setup after loading the view.
     }
-    
-    
-    
-    func delay(delay:Double, closure:()->()) {
-        dispatch_after(
-            dispatch_time(
-                DISPATCH_TIME_NOW,
-                Int64(delay * Double(NSEC_PER_SEC))
-            ),
-            dispatch_get_main_queue(), closure)
-    }
-    
-    func onRefresh() {
-        delay(2, closure: {
-            self.refreshControl.endRefreshing()
-        })
-    }
-    
-    
-    
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    
+    /*func loadDataFromNetwork() {
+        
+        // ... Create the NSURLRequest (myRequest) ...
+        let apiKey = "a07e22bc18f5cb106bfe4cc1f83ad8ed"
+        let url = NSURL(string:"https://api.themoviedb.org/3/movie/\(endpoint)?api_key=\(apiKey)")
+        let myRequest = NSURLRequest(URL: url!)
+        
+        // Configure session so that completion handler is executed on main UI thread
+        let session = NSURLSession(
+            configuration: NSURLSessionConfiguration.defaultSessionConfiguration(),
+            delegate:nil,
+            delegateQueue:NSOperationQueue.mainQueue()
+        )
+        
+        // Display HUD right before the request is made
+        MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+        
+        let task : NSURLSessionDataTask = session.dataTaskWithRequest(myRequest,
+            completionHandler: { (data, response, error) in
+                
+                // Hide HUD once the network request comes back (must be done on main UI thread)
+                MBProgressHUD.hideHUDForView(self.view, animated: true)
+                
+                // ... Remainder of response handling code ...
+                
+        });
+        task.resume()
+    }*/
     
     
     

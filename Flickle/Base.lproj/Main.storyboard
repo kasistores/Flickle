@@ -62,6 +62,11 @@
                                             </tableViewCell>
                                         </prototypes>
                                     </tableView>
+                                    <view contentMode="scaleToFill" id="fhg-8J-1mR">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="21"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    </view>
                                 </subviews>
                                 <color key="backgroundColor" red="0.1215686275" green="0.12941176469999999" blue="0.14117647059999999" alpha="1" colorSpace="calibratedRGB"/>
                             </view>
@@ -72,6 +77,7 @@
                     <navigationItem key="navigationItem" title="Flickle" id="iKU-D8-hrM"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
                     <connections>
+                        <outlet property="statusView" destination="fhg-8J-1mR" id="WnW-Gh-K51"/>
                         <outlet property="tableView" destination="w4h-sd-NVt" id="IJj-4S-aNu"/>
                     </connections>
                 </viewController>
@@ -88,14 +94,14 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="oU3-Ud-AW1">
-                                <rect key="frame" x="0.0" y="57" width="375" height="563"/>
+                                <rect key="frame" x="0.0" y="62" width="375" height="558"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" id="TfH-HL-4IO">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
-                                    <view alpha="0.84999999999999998" contentMode="scaleToFill" id="mmI-T3-lUj">
+                                    <view alpha="0.80000000000000004" contentMode="scaleToFill" id="mmI-T3-lUj">
                                         <rect key="frame" x="0.0" y="666" width="375" height="400"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <subviews>
