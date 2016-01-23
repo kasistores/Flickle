@@ -12,7 +12,7 @@ import EZLoadingActivity
 import MBProgressHUD
 import SwiftHEXColors
 
-class MoviesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate{
+class MoviesViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource{
 
     @IBOutlet weak var tableView: UITableView!
     
@@ -48,10 +48,10 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         
         refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: "onRefresh", forControlEvents: UIControlEvents.ValueChanged)
-        tableView.insertSubview(refreshControl, atIndex: 0)
+        collectionView.insertSubview(refreshControl, atIndex: 0)
         
-        tableView.dataSource = self
-        tableView.delegate = self
+        collectionView.dataSource = self
+        collectionView.delegate = self
         
         
         let apiKey = "a07e22bc18f5cb106bfe4cc1f83ad8ed"
@@ -71,7 +71,7 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
                             NSLog("response: \(responseDictionary)")
                             
                             self.movies = responseDictionary["results"] as? [NSDictionary]
-                            self.tableView.reloadData()
+                            self.collectionView.reloadData()
                           
                             EZLoadingActivity.hide(success: true, animated: true)
                             self.networkView.hidden = true
@@ -126,7 +126,7 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     
     
     
-   func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int{
+   /*func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int{
        
         if let movies = movies {
             return movies.count
@@ -135,22 +135,22 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
             return 0
         }
         
-    }
+    }*/
     
     
-   /* func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int{
+   func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int{
         if let movies = movies {
             return movies.count
         }
         else {
             return 0
         }
-    }*/
+    }
     
 
     
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell{
+    /*func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell{
         let cell = tableView.dequeueReusableCellWithIdentifier("MovieCell", forIndexPath: indexPath) as! MovieCell
         
         let movie = movies![indexPath.row]
@@ -189,12 +189,12 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         
         print("row \(indexPath.row)")
         return cell
-    }
+    }*/
     
     
-    /*func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell{
+    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell{
         
-        let cellone = collectionView.dequeueReusableCellWithReuseIdentifier("oneView", forIndexPath: indexPath) as! oneView
+        let cellone = collectionView.dequeueReusableCellWithReuseIdentifier("collectionCell", forIndexPath: indexPath) as! collectionCell
         
         let movie = movies![indexPath.row]
         let title = movie["title"] as! String
@@ -233,7 +233,7 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         print("row \(indexPath.row)")
         return cellone
         
-    }*/
+    }
     
     
     
@@ -248,8 +248,8 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        let cell = sender as! UITableViewCell
-        let indexPath = tableView.indexPathForCell(cell)
+        let cell = sender as! UICollectionViewCell
+        let indexPath = collectionView.indexPathForCell(cell)
         let movie = movies![indexPath!.row]
         
         let detailViewcontroller = segue.destinationViewController as! DetailViewController
