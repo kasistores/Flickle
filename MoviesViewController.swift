@@ -16,8 +16,12 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
 
     @IBOutlet weak var tableView: UITableView!
     
-    @IBOutlet weak var statusView: UIView!
     @IBOutlet weak var collectionView: UICollectionView!
+    //@IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var networkView: UIView!
+    @IBOutlet weak var titleLabel: UINavigationItem!
+    @IBOutlet weak var statusView: UIView!
+    //@IBOutlet weak var collectionView: UICollectionView!
     var movies: [NSDictionary]?
     var refreshControl: UIRefreshControl!
     var font = UIFont.systemFontOfSize(21)
@@ -28,17 +32,19 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         
         
         
-        //EZLoadingActivity.show("Waiting...", disableUI: true)
-        let color = UIColor(hexString: "#ff8942")
         
-        self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
-        self.navigationController?.navigationBar.barTintColor = color
-        self.navigationController?.navigationBar.translucent = true
-        self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor()]
+        EZLoadingActivity.show("Waiting...", disableUI: true)
+        let color = UIColor(hexString: "#ff8942")
+        self.networkView.hidden = true
+        
+        //self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
+        //self.navigationController?.navigationBar.barTintColor = color
+        //self.navigationController?.navigationBar.translucent = true
+        self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor(),  NSFontAttributeName : UIFont.boldSystemFontOfSize(19)]
         //self.navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName: UIFont.systemFontOfSize(25)]
-        self.tabBarController?.tabBar.translucent = true
+        //self.tabBarController?.tabBar.translucent = true
         self.tabBarController?.tabBar.tintColor = color
-        statusView.backgroundColor = color
+        //statusView.backgroundColor = color
         
         refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: "onRefresh", forControlEvents: UIControlEvents.ValueChanged)
@@ -68,12 +74,13 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
                             self.tableView.reloadData()
                           
                             EZLoadingActivity.hide(success: true, animated: true)
-                            
+                            self.networkView.hidden = true
                             
                     }
                 }
                 else {
                    EZLoadingActivity.hide(success: false, animated: true)
+                   self.networkView.hidden = false
                 }
         });
         task.resume()
@@ -130,6 +137,16 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         
     }
     
+    
+   /* func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int{
+        if let movies = movies {
+            return movies.count
+        }
+        else {
+            return 0
+        }
+    }*/
+    
 
     
     
@@ -173,6 +190,50 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         print("row \(indexPath.row)")
         return cell
     }
+    
+    
+    /*func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell{
+        
+        let cellone = collectionView.dequeueReusableCellWithReuseIdentifier("oneView", forIndexPath: indexPath) as! oneView
+        
+        let movie = movies![indexPath.row]
+        let title = movie["title"] as! String
+        //let overview = movie["overview"] as! String
+        //cell.overviewLabel.text = overview
+        cellone.titleLabel.text = title
+        
+        
+        let baseUrl = "http://image.tmdb.org/t/p/w500"
+        
+        if let posterPath = movie["poster_path"] as? String {
+            let imageUrl = NSURLRequest(URL: NSURL(string: baseUrl + posterPath)!)
+            cellone.posterView.setImageWithURLRequest(
+                imageUrl,
+                placeholderImage: nil,
+                success: { (imageRequest, imageResponse, image) -> Void in
+                    
+                    // imageResponse will be nil if the image is cached
+                    if imageResponse != nil {
+                        print("Image was NOT cached, fade in image")
+                        cellone.posterView.alpha = 0.0
+                        cellone.posterView.image = image
+                        UIView.animateWithDuration(0.3, animations: { () -> Void in
+                            cellone.posterView.alpha = 1.0
+                        })
+                    } else {
+                        print("Image was cached so just update the image")
+                        cellone.posterView.image = image
+                    }
+                },
+                failure: { (imageUrl, imageResponse, error) -> Void in
+                    //leave blank
+            })
+        }
+        
+        print("row \(indexPath.row)")
+        return cellone
+        
+    }*/
     
     
     

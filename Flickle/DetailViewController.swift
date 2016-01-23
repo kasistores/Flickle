@@ -42,7 +42,6 @@ class DetailViewController: UIViewController {
             posterImageView.setImageWithURL(imageUrl!)
         }
         
-        
         print(movie)
 
         // Do any additional setup after loading the view.
