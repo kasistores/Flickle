@@ -2,7 +2,7 @@
 
 **Flickle** is a movies app using the [The Movie Database API](http://docs.themoviedb.apiary.io/#).
 
-Time spent: **8** hours spent in total
+Time spent: **13** hours spent in total
 
 ## User Stories
 
@@ -17,7 +17,7 @@ The following **optional** features are implemented:
 
 - [x] User sees an error message when there's a networking error.
 - [x] Movies are displayed using a CollectionView instead of a TableView.
-- [ ] User can search for a movie.
+- [x] User can search for a movie.
 - [x] All images fade in as they are loading.
 - [x] Customize the UI.
 
@@ -59,7 +59,7 @@ For some reason on the simulator a white screen appears while the loading sign i
 
 **Flickle** is a movies app displaying box office and top rental DVDs using [The Movie Database API](http://docs.themoviedb.apiary.io/#).
 
-Time spent: **3** hours spent in total
+Time spent: **7** hours spent in total
 
 ## User Stories
 
@@ -71,24 +71,29 @@ The following **required** functionality is completed:
 
 The following **optional** features are implemented:
 
-- [ ] For the large poster, load the low resolution image first and then switch to the high resolution image when complete.
+- [x] For the large poster, load the low resolution image first and then switch to the high resolution image when complete.
 - [x] Customize the navigation bar.
 
 The following **additional** features are implemented:
 
 - [ ] List anything else that you can get done to improve the app functionality!
 
+Please list two areas of the assignment you'd like to **discuss further with your peers** during the next class (examples include better ways to implement something, how to extend your app in certain ways, etc):
+
+1. include videos from an api would it work the same?
+2. more finger gesture tutorials?
+
 ## Video Walkthrough 
 
 Here's a walkthrough of implemented user stories:
 
-<img src='http://i.imgur.com/3KgSSp6.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='http://i.imgur.com/o1ab2Hh.gifv' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
 ## Notes
 
-There is still difficulty with the loading state. Segue wouldn't work for a long time and don't know how to change color of it.
+There was great difficulty figuring out how to search for a movie but eventually a solution was otained. Also I did not have time to implement other features such as popularity and release date
 
 ## License
 
