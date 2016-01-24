@@ -17,7 +17,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
-                                    <searchBar contentMode="redraw" placeholder="Search for a flick!" translucent="NO" id="zvl-oW-MWT">
+                                    <searchBar contentMode="redraw" placeholder="Search for a flick!" showsCancelButton="YES" translucent="NO" id="zvl-oW-MWT">
                                         <rect key="frame" x="0.0" y="63" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
@@ -38,32 +38,47 @@
                                             </label>
                                         </subviews>
                                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                        <gestureRecognizers/>
+                                        <connections>
+                                            <outletCollection property="gestureRecognizers" destination="goB-iO-zei" appends="YES" id="fmU-Zi-p6W"/>
+                                        </connections>
                                     </view>
                                     <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="qhl-pa-KB9" customClass="collectionView">
-                                        <rect key="frame" x="0.0" y="107" width="375" height="560"/>
+                                        <rect key="frame" x="0.0" y="106" width="375" height="509"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="KIm-aa-L5U">
-                                            <size key="itemSize" width="172" height="297"/>
+                                            <size key="itemSize" width="179" height="285"/>
                                             <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                         </collectionViewFlowLayout>
                                         <cells>
-                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="gbw-oN-zYP" customClass="collectionCell" customModule="Flickle" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="0.0" width="172" height="297"/>
+                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="collectionCell" id="gbw-oN-zYP" customClass="collectionCell" customModule="Flickle" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="0.0" width="179" height="285"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                                    <rect key="frame" x="0.0" y="0.0" width="172" height="297"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="179" height="285"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="LuG-Nb-Lg8">
-                                                            <rect key="frame" x="5" y="0.0" width="159" height="236"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="178" height="245"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                         </imageView>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="3cp-U1-YdW">
-                                                            <rect key="frame" x="8" y="243" width="156" height="46"/>
+                                                        <view contentMode="scaleToFill" id="Xgx-hd-ZAV">
+                                                            <rect key="frame" x="179" y="0.0" width="2" height="285"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                            <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                                        </view>
+                                                        <view contentMode="scaleToFill" id="S3Z-Wa-Dox">
+                                                            <rect key="frame" x="0.0" y="285" width="178" height="2"/>
+                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                            <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                                        </view>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="3cp-U1-YdW">
+                                                            <rect key="frame" x="8" y="250" width="156" height="22"/>
+                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="19"/>
                                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
@@ -78,8 +93,13 @@
                                             </collectionViewCell>
                                         </cells>
                                     </collectionView>
+                                    <view contentMode="scaleToFill" id="nMj-Ne-5IA">
+                                        <rect key="frame" x="0.0" y="617" width="375" height="47"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" red="1" green="0.53725490200000003" blue="0.25882352939999997" alpha="1" colorSpace="calibratedRGB"/>
+                                    </view>
                                 </subviews>
-                                <color key="backgroundColor" red="0.1215686275" green="0.12941176469999999" blue="0.14117647059999999" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
                         </subviews>
                         <gestureRecognizers/>
@@ -89,10 +109,17 @@
                     <connections>
                         <outlet property="collectionView" destination="qhl-pa-KB9" id="5Yy-oO-fZx"/>
                         <outlet property="networkView" destination="u6w-w8-Tah" id="6PL-sD-1g4"/>
+                        <outlet property="searchBar" destination="zvl-oW-MWT" id="06M-Rd-b7M"/>
                         <outlet property="titleLabel" destination="iKU-D8-hrM" id="yYl-A9-WWv"/>
+                        <outlet property="viewColor" destination="nMj-Ne-5IA" id="NB7-kb-vB8"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="goB-iO-zei">
+                    <connections>
+                        <action selector="onTap:" destination="BYZ-38-t0r" id="bGn-ga-aq2"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="3144.5" y="333.5"/>
         </scene>
@@ -113,18 +140,18 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <view alpha="0.80000000000000004" contentMode="scaleToFill" id="mmI-T3-lUj">
-                                        <rect key="frame" x="0.0" y="620" width="375" height="500"/>
+                                        <rect key="frame" x="0.0" y="452" width="375" height="501"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="yNz-fs-bNX">
-                                                <rect key="frame" x="8" y="8" width="359" height="21"/>
+                                                <rect key="frame" x="8" y="9" width="359" height="21"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="19"/>
                                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Jat-gM-ZpD">
-                                                <rect key="frame" x="8" y="37" width="359" height="21"/>
+                                                <rect key="frame" x="8" y="38" width="359" height="21"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
@@ -135,6 +162,11 @@
                                     </view>
                                 </subviews>
                             </scrollView>
+                            <view contentMode="scaleToFill" id="tyU-Xv-ZaR">
+                                <rect key="frame" x="0.0" y="617" width="375" height="47"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="1" green="0.53725490200000003" blue="0.25882352939999997" alpha="1" colorSpace="calibratedRGB"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>

@@ -12,7 +12,7 @@ import EZLoadingActivity
 import MBProgressHUD
 import SwiftHEXColors
 
-class MoviesViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource{
+class MoviesViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UISearchBarDelegate{
 
     @IBOutlet weak var tableView: UITableView!
     
@@ -21,21 +21,137 @@ class MoviesViewController: UIViewController, UICollectionViewDelegate, UICollec
     @IBOutlet weak var networkView: UIView!
     @IBOutlet weak var titleLabel: UINavigationItem!
     @IBOutlet weak var statusView: UIView!
+    
+    @IBOutlet weak var viewColor: UIView!
     //@IBOutlet weak var collectionView: UICollectionView!
     var movies: [NSDictionary]?
+    var allMovies: [NSDictionary]?
+    var filteredData: [NSDictionary]?
     var refreshControl: UIRefreshControl!
     var font = UIFont.systemFontOfSize(21)
     var endpoint: String!
+    let color: UIColor = UIColor(hexString: "#D3D3D3")!
+    
+    @IBOutlet weak var searchBar: UISearchBar!
+    
+    
+    @IBAction func onTap(sender: AnyObject) {
+        print("tap recieved")
+        EZLoadingActivity.show("Waiting...", disableUI: true)
+        let color = UIColor(hexString: "#ff8942")
+        self.networkView.hidden = true
+        
+        searchBar.delegate = self
+        
+        self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor(),  NSFontAttributeName : UIFont.boldSystemFontOfSize(19)]
+        self.tabBarController?.tabBar.tintColor = color
+        //statusView.backgroundColor = color
+        self.tabBarController?.tabBar.translucent = false
+        
+        //refreshControl = UIRefreshControl()
+        filteredData = movies
+        
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        
+        
+        let apiKey = "a07e22bc18f5cb106bfe4cc1f83ad8ed"
+        let url = NSURL(string:"https://api.themoviedb.org/3/movie/\(endpoint)?api_key=\(apiKey)")
+        let request = NSURLRequest(URL: url!)
+        let session = NSURLSession(
+            configuration: NSURLSessionConfiguration.defaultSessionConfiguration(),
+            delegate:nil,
+            delegateQueue:NSOperationQueue.mainQueue()
+        )
+        
+        let task : NSURLSessionDataTask = session.dataTaskWithRequest(request,
+            completionHandler: { (dataOrNil, response, error) in
+                if let data = dataOrNil {
+                    if let responseDictionary = try! NSJSONSerialization.JSONObjectWithData(
+                        data, options:[]) as? NSDictionary {
+                            NSLog("response: \(responseDictionary)")
+                            
+                            self.movies = responseDictionary["results"] as? [NSDictionary]
+                            self.collectionView.reloadData()
+                            
+                            EZLoadingActivity.hide(success: true, animated: true)
+                            self.networkView.hidden = true
+                            
+                    }
+                }
+                else {
+                    EZLoadingActivity.hide(success: false, animated: false)
+                    self.networkView.hidden = false
+                }
+        });
+        task.resume()
+        print("oh yea")
+    }
+    
+    func onRefresh() {
+        EZLoadingActivity.show("Waiting...", disableUI: true)
+        let color = UIColor(hexString: "#ff8942")
+        self.networkView.hidden = true
+        
+        searchBar.delegate = self
+        
+        self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor(),  NSFontAttributeName : UIFont.boldSystemFontOfSize(19)]
+        self.tabBarController?.tabBar.tintColor = color
+        //statusView.backgroundColor = color
+        self.tabBarController?.tabBar.translucent = false
+        
+        //refreshControl = UIRefreshControl()
+        filteredData = movies
+        
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        
+        
+        let apiKey = "a07e22bc18f5cb106bfe4cc1f83ad8ed"
+        let url = NSURL(string:"https://api.themoviedb.org/3/movie/\(endpoint)?api_key=\(apiKey)")
+        let request = NSURLRequest(URL: url!)
+        let session = NSURLSession(
+            configuration: NSURLSessionConfiguration.defaultSessionConfiguration(),
+            delegate:nil,
+            delegateQueue:NSOperationQueue.mainQueue()
+        )
+        
+        let task : NSURLSessionDataTask = session.dataTaskWithRequest(request,
+            completionHandler: { (dataOrNil, response, error) in
+                if let data = dataOrNil {
+                    if let responseDictionary = try! NSJSONSerialization.JSONObjectWithData(
+                        data, options:[]) as? NSDictionary {
+                            NSLog("response: \(responseDictionary)")
+                            
+                            self.movies = responseDictionary["results"] as? [NSDictionary]
+                            self.collectionView.reloadData()
+                            
+                            EZLoadingActivity.hide(success: true, animated: true)
+                            self.networkView.hidden = true
+                            self.refreshControl.endRefreshing()
+                            
+                    }
+                }
+                else {
+                    EZLoadingActivity.hide(success: false, animated: false)
+                    self.networkView.hidden = false
+                }
+        });
+        task.resume()
+        print("oh yea")
+    }
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         
         
-        
         EZLoadingActivity.show("Waiting...", disableUI: true)
         let color = UIColor(hexString: "#ff8942")
         self.networkView.hidden = true
+        
+        searchBar.delegate = self
         
         //self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
         //self.navigationController?.navigationBar.barTintColor = color
@@ -45,10 +161,14 @@ class MoviesViewController: UIViewController, UICollectionViewDelegate, UICollec
         //self.tabBarController?.tabBar.translucent = true
         self.tabBarController?.tabBar.tintColor = color
         //statusView.backgroundColor = color
+        self.tabBarController?.tabBar.translucent = false
         
         refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: "onRefresh", forControlEvents: UIControlEvents.ValueChanged)
+        
         collectionView.insertSubview(refreshControl, atIndex: 0)
+        
+        filteredData = movies
         
         collectionView.dataSource = self
         collectionView.delegate = self
@@ -79,7 +199,7 @@ class MoviesViewController: UIViewController, UICollectionViewDelegate, UICollec
                     }
                 }
                 else {
-                   EZLoadingActivity.hide(success: false, animated: true)
+                   EZLoadingActivity.hide(success: false, animated: false)
                    self.networkView.hidden = false
                 }
         });
@@ -95,112 +215,25 @@ class MoviesViewController: UIViewController, UICollectionViewDelegate, UICollec
     }
     
     
-    /*func loadDataFromNetwork() {
-        
-        // ... Create the NSURLRequest (myRequest) ...
-        let apiKey = "a07e22bc18f5cb106bfe4cc1f83ad8ed"
-        let url = NSURL(string:"https://api.themoviedb.org/3/movie/\(endpoint)?api_key=\(apiKey)")
-        let myRequest = NSURLRequest(URL: url!)
-        
-        // Configure session so that completion handler is executed on main UI thread
-        let session = NSURLSession(
-            configuration: NSURLSessionConfiguration.defaultSessionConfiguration(),
-            delegate:nil,
-            delegateQueue:NSOperationQueue.mainQueue()
-        )
-        
-        // Display HUD right before the request is made
-        MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-        
-        let task : NSURLSessionDataTask = session.dataTaskWithRequest(myRequest,
-            completionHandler: { (data, response, error) in
-                
-                // Hide HUD once the network request comes back (must be done on main UI thread)
-                MBProgressHUD.hideHUDForView(self.view, animated: true)
-                
-                // ... Remainder of response handling code ...
-                
-        });
-        task.resume()
-    }*/
-    
-    
-    
-   /*func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int{
-       
-        if let movies = movies {
-            return movies.count
-        }
-        else {
-            return 0
-        }
-        
-    }*/
-    
-    
    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int{
-        if let movies = movies {
-            return movies.count
-        }
-        else {
-            return 0
-        }
+        return (filteredData?.count)!
     }
-    
-
-    
-    
-    /*func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell{
-        let cell = tableView.dequeueReusableCellWithIdentifier("MovieCell", forIndexPath: indexPath) as! MovieCell
-        
-        let movie = movies![indexPath.row]
-        let title = movie["title"] as! String
-        let overview = movie["overview"] as! String
-        cell.overviewLabel.text = overview
-        cell.titleLabel.text = title
-        
-        
-        let baseUrl = "http://image.tmdb.org/t/p/w500"
-        
-        if let posterPath = movie["poster_path"] as? String {
-            let imageUrl = NSURLRequest(URL: NSURL(string: baseUrl + posterPath)!)
-            cell.posterView.setImageWithURLRequest(
-                imageUrl,
-                placeholderImage: nil,
-                success: { (imageRequest, imageResponse, image) -> Void in
-                    
-                    // imageResponse will be nil if the image is cached
-                    if imageResponse != nil {
-                        print("Image was NOT cached, fade in image")
-                        cell.posterView.alpha = 0.0
-                        cell.posterView.image = image
-                        UIView.animateWithDuration(0.3, animations: { () -> Void in
-                            cell.posterView.alpha = 1.0
-                        })
-                    } else {
-                        print("Image was cached so just update the image")
-                        cell.posterView.image = image
-                    }
-                },
-                failure: { (imageUrl, imageResponse, error) -> Void in
-                    //leave blank
-            })
-        }
-        
-        print("row \(indexPath.row)")
-        return cell
-    }*/
     
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell{
         
         let cellone = collectionView.dequeueReusableCellWithReuseIdentifier("collectionCell", forIndexPath: indexPath) as! collectionCell
         
+        
+        
+        
+        
         let movie = movies![indexPath.row]
         let title = movie["title"] as! String
         //let overview = movie["overview"] as! String
         //cell.overviewLabel.text = overview
         cellone.titleLabel.text = title
+        
         
         
         let baseUrl = "http://image.tmdb.org/t/p/w500"
@@ -235,12 +268,26 @@ class MoviesViewController: UIViewController, UICollectionViewDelegate, UICollec
         
     }
     
+    func searchBarTextDidBeginEditing(searchBar: UISearchBar) {
+        self.searchBar.showsCancelButton = true
+    }
     
+    func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
+            filteredData = searchText.isEmpty ? movies : movies!.filter({(dataString: String) -> Bool in
+                return dataString.rangeOfString(searchText, options: .CaseInsensitiveSearch) != nil
+            })
+            
+            tableView.reloadData()
+    }
     
+    func searchBarCancelButton(searchBar: UISearchBar){
+        searchBar.text = ""
+        movies = allMovies
+        searchBar.resignFirstResponder()
+        self.collectionView.reloadData()
+        print("searchbar cancelled")
+    }
     
-    //@IBAction func onTap(sender: AnyObject) {
-      //  view.endEditing(true)
-    //}
 
 
     
@@ -254,8 +301,11 @@ class MoviesViewController: UIViewController, UICollectionViewDelegate, UICollec
         
         let detailViewcontroller = segue.destinationViewController as! DetailViewController
         detailViewcontroller.movie = movie
-        
-        
+    
+        let backgroundView = UIView()
+        let color: UIColor = UIColor(hexString: "#D3D3D3")!
+        backgroundView.backgroundColor = color
+        cell.selectedBackgroundView = backgroundView
         
         print("Prepare for Segue Called")
         // Get the new view controller using segue.destinationViewController.
