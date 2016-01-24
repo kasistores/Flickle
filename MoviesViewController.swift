@@ -25,8 +25,7 @@ class MoviesViewController: UIViewController, UICollectionViewDelegate, UICollec
     @IBOutlet weak var viewColor: UIView!
     //@IBOutlet weak var collectionView: UICollectionView!
     var movies: [NSDictionary]?
-    var allMovies: [String]?
-    var filteredData: [String]?
+    var filteredData: [NSDictionary]?
     var refreshControl: UIRefreshControl!
     var font = UIFont.systemFontOfSize(21)
     var endpoint: String!
@@ -47,7 +46,6 @@ class MoviesViewController: UIViewController, UICollectionViewDelegate, UICollec
         self.tabBarController?.tabBar.tintColor = color
         //statusView.backgroundColor = color
         self.tabBarController?.tabBar.translucent = false
-        
         //refreshControl = UIRefreshControl()
         collectionView.dataSource = self
         collectionView.delegate = self
@@ -74,6 +72,7 @@ class MoviesViewController: UIViewController, UICollectionViewDelegate, UICollec
                             
                             EZLoadingActivity.hide(success: true, animated: true)
                             self.networkView.hidden = true
+                            self.filteredData = self.movies
                             
                     }
                 }
@@ -99,7 +98,6 @@ class MoviesViewController: UIViewController, UICollectionViewDelegate, UICollec
         self.tabBarController?.tabBar.translucent = false
         
         //refreshControl = UIRefreshControl()
-        
         collectionView.dataSource = self
         collectionView.delegate = self
         
@@ -126,6 +124,8 @@ class MoviesViewController: UIViewController, UICollectionViewDelegate, UICollec
                             EZLoadingActivity.hide(success: true, animated: true)
                             self.networkView.hidden = true
                             self.refreshControl.endRefreshing()
+                            
+                            self.filteredData = self.movies
                             
                     }
                 }
@@ -164,8 +164,6 @@ class MoviesViewController: UIViewController, UICollectionViewDelegate, UICollec
         refreshControl.addTarget(self, action: "onRefresh", forControlEvents: UIControlEvents.ValueChanged)
         
         collectionView.insertSubview(refreshControl, atIndex: 0)
-        
-        
         collectionView.dataSource = self
         collectionView.delegate = self
         
@@ -191,6 +189,7 @@ class MoviesViewController: UIViewController, UICollectionViewDelegate, UICollec
                           
                             EZLoadingActivity.hide(success: true, animated: true)
                             self.networkView.hidden = true
+                            self.filteredData = self.movies
                             
                     }
                 }
@@ -217,14 +216,11 @@ class MoviesViewController: UIViewController, UICollectionViewDelegate, UICollec
         
         
         
-        let movie = movies![indexPath.row]
+        let movie = filteredData![indexPath.row]
         let title = movie["title"] as! String
         //let overview = movie["overview"] as! String
         //cell.overviewLabel.text = overview
         cellone.titleLabel.text = title
-       
-        filteredData?.append(title)
-        allMovies?.append(title)
         
         
         
@@ -262,16 +258,14 @@ class MoviesViewController: UIViewController, UICollectionViewDelegate, UICollec
     
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int{
-        if let movies = movies {
-            return movies.count
-        }
-        else {
+        if filteredData == nil{
             return 0
         }
+        else{
+            print(filteredData?.count)
+            return filteredData!.count
+        }
     }
-    
-    
-    
     
     
     func searchBarTextDidBeginEditing(searchBar: UISearchBar) {
@@ -282,10 +276,31 @@ class MoviesViewController: UIViewController, UICollectionViewDelegate, UICollec
     
     
     func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
-        filteredData = searchText.isEmpty ? allMovies : allMovies!.filter({(dataString: String) -> Bool in
-            return dataString.rangeOfString(searchText, options: .CaseInsensitiveSearch) != nil
-        })
-        
+        // When there is no text, filteredData is the same as the original data
+        print("is it really working tho")
+        if searchText.isEmpty {
+            filteredData = movies
+        } else {
+            // The user has entered text into the search box
+            // Use the filter method on the array to iterate over all items in the data array
+            // For each item, return true if the item should be included and false if the
+            // item should NOT be included
+           
+            filteredData = movies!.filter({(dataItem: NSDictionary) -> Bool in
+                
+                
+                // If dataItem matches the searchText, return true to include it
+                let title = dataItem["title"] as? String
+                if title!.rangeOfString(searchText, options: .CaseInsensitiveSearch) != nil {
+                    print("found")
+                    return true
+                } else {
+                    print("nah")
+                    return false
+                }
+            })
+            
+        }
         collectionView.reloadData()
     }
     
@@ -296,53 +311,8 @@ class MoviesViewController: UIViewController, UICollectionViewDelegate, UICollec
     func searchBarCancelButtonClicked(searchBar: UISearchBar) {
         searchBar.text = nil;
         searchBar.resignFirstResponder()
-        
-        let color = UIColor(hexString: "#ff8942")
-        self.networkView.hidden = true
-        
-        searchBar.delegate = self
-        
-        self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor(),  NSFontAttributeName : UIFont.boldSystemFontOfSize(19)]
-        self.tabBarController?.tabBar.tintColor = color
-        //statusView.backgroundColor = color
-        self.tabBarController?.tabBar.translucent = false
-        
-        //refreshControl = UIRefreshControl()
-        
-        collectionView.dataSource = self
-        collectionView.delegate = self
-        
-        
-        let apiKey = "a07e22bc18f5cb106bfe4cc1f83ad8ed"
-        let url = NSURL(string:"https://api.themoviedb.org/3/movie/\(endpoint)?api_key=\(apiKey)")
-        let request = NSURLRequest(URL: url!)
-        let session = NSURLSession(
-            configuration: NSURLSessionConfiguration.defaultSessionConfiguration(),
-            delegate:nil,
-            delegateQueue:NSOperationQueue.mainQueue()
-        )
-        
-        let task : NSURLSessionDataTask = session.dataTaskWithRequest(request,
-            completionHandler: { (dataOrNil, response, error) in
-                if let data = dataOrNil {
-                    if let responseDictionary = try! NSJSONSerialization.JSONObjectWithData(
-                        data, options:[]) as? NSDictionary {
-                            NSLog("response: \(responseDictionary)")
-                            
-                            self.movies = responseDictionary["results"] as? [NSDictionary]
-                            self.collectionView.reloadData()
-                            
-                            //EZLoadingActivity.hide(success: true, animated: true)
-                            //self.networkView.hidden = true
-                            
-                    }
-                }
-                else {
-                    //EZLoadingActivity.hide(success: false, animated: false)
-                    //self.networkView.hidden = false
-                }
-        });
-        task.resume()
+        filteredData = movies
+        collectionView.reloadData()
         print("oh yea")
         
     }
@@ -356,7 +326,7 @@ class MoviesViewController: UIViewController, UICollectionViewDelegate, UICollec
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         let cell = sender as! UICollectionViewCell
         let indexPath = collectionView.indexPathForCell(cell)
-        let movie = movies![indexPath!.row]
+        let movie = filteredData![indexPath!.row]
         
         let detailViewcontroller = segue.destinationViewController as! DetailViewController
         detailViewcontroller.movie = movie
