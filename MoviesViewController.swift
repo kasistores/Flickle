@@ -25,8 +25,8 @@ class MoviesViewController: UIViewController, UICollectionViewDelegate, UICollec
     @IBOutlet weak var viewColor: UIView!
     //@IBOutlet weak var collectionView: UICollectionView!
     var movies: [NSDictionary]?
-    var allMovies: [NSDictionary]?
-    var filteredData: [NSDictionary]?
+    var allMovies: [String]?
+    var filteredData: [String]?
     var refreshControl: UIRefreshControl!
     var font = UIFont.systemFontOfSize(21)
     var endpoint: String!
@@ -49,8 +49,6 @@ class MoviesViewController: UIViewController, UICollectionViewDelegate, UICollec
         self.tabBarController?.tabBar.translucent = false
         
         //refreshControl = UIRefreshControl()
-        filteredData = movies
-        
         collectionView.dataSource = self
         collectionView.delegate = self
         
@@ -101,7 +99,6 @@ class MoviesViewController: UIViewController, UICollectionViewDelegate, UICollec
         self.tabBarController?.tabBar.translucent = false
         
         //refreshControl = UIRefreshControl()
-        filteredData = movies
         
         collectionView.dataSource = self
         collectionView.delegate = self
@@ -168,7 +165,6 @@ class MoviesViewController: UIViewController, UICollectionViewDelegate, UICollec
         
         collectionView.insertSubview(refreshControl, atIndex: 0)
         
-        filteredData = movies
         
         collectionView.dataSource = self
         collectionView.delegate = self
@@ -215,16 +211,9 @@ class MoviesViewController: UIViewController, UICollectionViewDelegate, UICollec
     }
     
     
-   func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int{
-        return (filteredData?.count)!
-    }
-    
-    
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell{
         
         let cellone = collectionView.dequeueReusableCellWithReuseIdentifier("collectionCell", forIndexPath: indexPath) as! collectionCell
-        
-        
         
         
         
@@ -233,6 +222,9 @@ class MoviesViewController: UIViewController, UICollectionViewDelegate, UICollec
         //let overview = movie["overview"] as! String
         //cell.overviewLabel.text = overview
         cellone.titleLabel.text = title
+       
+        filteredData?.append(title)
+        allMovies?.append(title)
         
         
         
@@ -268,24 +260,91 @@ class MoviesViewController: UIViewController, UICollectionViewDelegate, UICollec
         
     }
     
+    
+    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int{
+        if let movies = movies {
+            return movies.count
+        }
+        else {
+            return 0
+        }
+    }
+    
+    
+    
+    
+    
     func searchBarTextDidBeginEditing(searchBar: UISearchBar) {
         self.searchBar.showsCancelButton = true
     }
     
+    
+    
+    
     func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
-            filteredData = searchText.isEmpty ? movies : movies!.filter({(dataString: String) -> Bool in
-                return dataString.rangeOfString(searchText, options: .CaseInsensitiveSearch) != nil
-            })
-            
-            tableView.reloadData()
+        filteredData = searchText.isEmpty ? allMovies : allMovies!.filter({(dataString: String) -> Bool in
+            return dataString.rangeOfString(searchText, options: .CaseInsensitiveSearch) != nil
+        })
+        
+        collectionView.reloadData()
     }
     
-    func searchBarCancelButton(searchBar: UISearchBar){
-        searchBar.text = ""
-        movies = allMovies
+    
+    
+    
+    
+    func searchBarCancelButtonClicked(searchBar: UISearchBar) {
+        searchBar.text = nil;
         searchBar.resignFirstResponder()
-        self.collectionView.reloadData()
-        print("searchbar cancelled")
+        
+        let color = UIColor(hexString: "#ff8942")
+        self.networkView.hidden = true
+        
+        searchBar.delegate = self
+        
+        self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor(),  NSFontAttributeName : UIFont.boldSystemFontOfSize(19)]
+        self.tabBarController?.tabBar.tintColor = color
+        //statusView.backgroundColor = color
+        self.tabBarController?.tabBar.translucent = false
+        
+        //refreshControl = UIRefreshControl()
+        
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        
+        
+        let apiKey = "a07e22bc18f5cb106bfe4cc1f83ad8ed"
+        let url = NSURL(string:"https://api.themoviedb.org/3/movie/\(endpoint)?api_key=\(apiKey)")
+        let request = NSURLRequest(URL: url!)
+        let session = NSURLSession(
+            configuration: NSURLSessionConfiguration.defaultSessionConfiguration(),
+            delegate:nil,
+            delegateQueue:NSOperationQueue.mainQueue()
+        )
+        
+        let task : NSURLSessionDataTask = session.dataTaskWithRequest(request,
+            completionHandler: { (dataOrNil, response, error) in
+                if let data = dataOrNil {
+                    if let responseDictionary = try! NSJSONSerialization.JSONObjectWithData(
+                        data, options:[]) as? NSDictionary {
+                            NSLog("response: \(responseDictionary)")
+                            
+                            self.movies = responseDictionary["results"] as? [NSDictionary]
+                            self.collectionView.reloadData()
+                            
+                            //EZLoadingActivity.hide(success: true, animated: true)
+                            //self.networkView.hidden = true
+                            
+                    }
+                }
+                else {
+                    //EZLoadingActivity.hide(success: false, animated: false)
+                    //self.networkView.hidden = false
+                }
+        });
+        task.resume()
+        print("oh yea")
+        
     }
     
 
@@ -303,7 +362,7 @@ class MoviesViewController: UIViewController, UICollectionViewDelegate, UICollec
         detailViewcontroller.movie = movie
     
         let backgroundView = UIView()
-        let color: UIColor = UIColor(hexString: "#D3D3D3")!
+        let color: UIColor = UIColor(hexString: "#fff6e5")!
         backgroundView.backgroundColor = color
         cell.selectedBackgroundView = backgroundView
         
