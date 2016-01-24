@@ -47,7 +47,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         UINavigationBar.appearance().tintColor = UIColor.whiteColor()
         
-        
+        tabBarController.tabBar.frame.size.height = 40
+        tabBarController.tabBar.frame.origin.y = 627
         
         //UITabBar.appearance().tintColor = UIColor.clearColor()
         
